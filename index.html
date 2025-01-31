@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fjala - Loje Shqip</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>FJALA 🦅</h1>
+        <div id="grid" class="grid"></div>
+        <div id="message"></div>
+        <div class="keyboard">
+            <div class="key-row">
+                <button class="key-button" onclick="pressKey('Q')">Q</button>
+                <button class="key-button" onclick="pressKey('W')">W</button>
+                <button class="key-button" onclick="pressKey('E')">E</button>
+                <button class="key-button" onclick="pressKey('R')">R</button>
+                <button class="key-button" onclick="pressKey('T')">T</button>
+                <button class="key-button" onclick="pressKey('Y')">Y</button>
+                <button class="key-button" onclick="pressKey('U')">U</button>
+                <button class="key-button" onclick="pressKey('I')">I</button>
+                <button class="key-button" onclick="pressKey('O')">O</button>
+                <button class="key-button" onclick="pressKey('P')">P</button>
+            </div>
+            <div class="key-row">
+                <button class="key-button" onclick="pressKey('A')">A</button>
+                <button class="key-button" onclick="pressKey('S')">S</button>
+                <button class="key-button" onclick="pressKey('D')">D</button>
+                <button class="key-button" onclick="pressKey('F')">F</button>
+                <button class="key-button" onclick="pressKey('G')">G</button>
+                <button class="key-button" onclick="pressKey('H')">H</button>
+                <button class="key-button" onclick="pressKey('J')">J</button>
+                <button class="key-button" onclick="pressKey('K')">K</button>
+                <button class="key-button" onclick="pressKey('L')">L</button>
+            </div>
+            <div class="key-row">
+                <button class="key-button" onclick="pressKey('Z')">Z</button>
+                <button class="key-button" onclick="pressKey('X')">X</button>
+                <button class="key-button" onclick="pressKey('C')">C</button>
+                <button class="key-button" onclick="pressKey('V')">V</button>
+                <button class="key-button" onclick="pressKey('B')">B</button>
+                <button class="key-button" onclick="pressKey('N')">N</button>
+                <button class="key-button" onclick="pressKey('M')">M</button>
+                <button class="key-button" onclick="deleteKey()">⌫</button>
+                <button class="key-button" onclick="submitGuess()">✅</button>
+            </div>
+        </div>
+        <button onclick="newGame()">Loje e Re</button>
+    </div>
+
+    <script>
+        const fjalet = {
+            3: ["ajo", "ata", "mbi", "tri", "ves", "pus", "gji", "ujk", "qik", "bab", "del", "rri", "mat", "vet", "han",
+             "bor", "lun", "bir", "lan", "mir", "lum", "daj", "jap", "bie", "fat", "kat", "mal", "gar", "kam", "val", "buz",
+              "nen", "par", "pul", "kal", "zor", "bac", "mac", "ari", "ara", "qen", "loj", "qaj", "yje", "fli", "fmi", "ide", "mik",
+              "edh", "hyj", "ese", "kos", "pse", "shi", "syt", "sps", "usb", "akt", "fyt", "qet", "tek", "tip", "tub", "urt", "art",
+              "ura","por", "lop", "ret", "bar", "bri", "ora", "era", "gra", "gri", "del", "hut", "hyn", "top", "vez", "dru", "loj",
+              "fik", "fis", "fol", "flm", "ajr", "ark", "bej", "bij", "buj", "cep", "cek", "dal", "dar", "zar", "deg", "dje", "dit",
+              "dua", "ato", "pel", "rim", "pal", "fal", "maj", "laj", "faj", "men", "mar"],
+            4: ["mure", "gjum", "pyll", "rrug", "afat", "afer", "ajri", "ardi", "arka", "arma", "arti", "asma", "atom",
+            "atje", "audi", "baba", "bali", "bari", "bark", "baza", "bima", "bira", "besa", "boca", "boja", "bora", "buka", "biku",
+            "cjap", "copa", "dajt", "dega", "dera", "dhia", "dija", "dita", "djaj", "djal", "dora", "ecja", "etja", "faji", "fama",
+            "faqe", "feja", "flak", "fjal", "flas", "foka", "ftua", "gati", "gare", "gazi", "gjak", "gjah", "goma", "gota", "gram",
+            "grua", "hajn", "haku", "hapi", "hark", "hena", "hava", "hija", "hoqa", "inat", "isha", "jave", "jeta", "juaj", "kaci",
+            "kafe", "kahu", "kali", "kang", "kant", "kaos", "klas", "koha", "krah", "kuaj", "lajm", "larg", "lart", "leja", "liga",
+            "llaf", "loja", "lopa", "luan", "luga", "lule", "maji", "maja", "mami", "mars", "maus", "mbaj","mbar", "eci", "mend",
+            "mish", "moll", "muri", "muzg", "nana", "nena", "nuse", "nxit", "naiv", "nasa", "nata", "ndal", "ngas", "ngat", "ngel",
+            "ngut", "ngec", "nipi", "njoh", "nota", "noti", "nyja", "nese", "edhe", "eger", "ekip", "emer", "epik", "ende", "erza",
+            "ohri", "orar", "oriz", "pjat", "pata", "pika","plis","pula", "puna", "pica", "paga", "paqe", "pema", "para","park",
+            "pela", "peng", "perl", "pije", "pite", "pjek", "plak", "plan", "pleh", "plep", "plis","plum", "plot", "poet", "pran", 
+            "prap", "priz", "prek", "pres", "puls", "puma", "puth", "pyje", "pyet", "qark", "qeni", "qaje", "qafe", "qepa", "qart",
+            "qejf", "qelb", "qelq", "qera", "qesh", "qese", "qfar", "qiri", "qmim", "qorr", "qyqe", "qysh", "radh", "raki", "raft",
+            "rast", "real", "reja", "rere", "rima", "rini", "risi", "robt", "roje", "rrip", "roje", "rosa", "sall", "sasi", "shat",
+            "sheh", "shes", "shko", "shok", "shof", "shpi", "shum", "shah", "sini", "sita", "skam", "skaj", "skuq", "smok", "sode",
+            "sola", "spec", "stol", "staf", "supa", "syni", "syte", "syza", "tako", "tani", "tapa", "tava", "tehu", "teke", "teli",
+            "tema", "terr", "ters", "tete", "teza", "them", "theu", "thes", "thua", "toka", "treg", "tren", "trim", "topi", "turp",
+            "tufa", "tuna", "tung", "tuta", "tymi", "udha", "ujdi", "ujit", "ujku", "ujor", "ulem", "ulli", "ulje", "unik", "uria",
+            "urim", "unaz", "usta", "vaji", "vajz", "vakt", "varg", "varr", "vath", "vazo", "vega", "vend", "vere", "veri", "veza",
+            "vija", "vila", "vite", "vize", "vlen", "vjet", "vler", "vlla", "vota", "vrap", "vula", "xham", "xehe", "xhep", "xixa",
+            "yjet", "ylli", "zarf", "zbeh", "zbut", "zeri", "zero", "zhyt", "zile", "ziej", "zogu", "zona", "zyre", "zeri", "blej",
+            "boks", "bosh", "java", "jugu", "ligj", "guri", "ftyr", "drit", "grep", "gjel", "pret", "adet", "port", "harp", "prit",
+            "bart", "emri", "euro", "ftua", "etur", "supe", "mali", "hije", "hart", "hare", "pirg", "nyje", "syri", ""],
+            5: ["abort", "acide", "afate", "afati", "afera", "afert", "afroj", "agrar", "aheng", "ajror", "akull", "alibi", "akoma",
+            "akord", "akrep", "akses", "aktor", "aktiv", "akuza", "aleat", "alpet", "ambel", "anash", "anija", "anije", "ankim","ankoj",
+            "ankth", "antar", "ansor", "antik", "arinj", "arkiv", "armik", "aroma", "arrij", "arrit", "arsye", "aspak", "atdhe", "atlas",
+            "atomi", "audio", "autor", "avion", "avull", "azoti", "babai", "bajge", "bajat", "bakri", "balli", "ballo", "balta", "banjo",
+            "banka", "banon", "banor", "barak", "baraz", "bariu", "barku", "barut", "bazen", "bashk", "bazik", "bebja", "befas", "behet",
+            "bekoj", "beqar", "besoj", "beton", "biber", "bibla", "bijat", "bijne", "bijte","bimen", "bimet", "bimor", "binar", "birat",
+            "birra", "bisha", "bisht", "bizon", "bjere", "bjeri", "bjond", "bleni", "blera", "blere", "bleta", "blini", "bllok", "bluaj",
+            "bluar", "bluza", "bohem", "boksi", "bomba", "bombe", "bordi", "borit", "borxh", "boshe", "bosht", "boten", "botes", "botim",
+            "botoi", "botoj", "boton", "botua", "botue", "boten", "botet", "brava", "bravo", "bredh", "bregu", "brinj", "briri", "brisk",
+            "bronz", "brumi", "bryma", "buall", "bujar", "bujku", "buken", "bukes", "bukur", "bulku", "bunar", "bungu","burgu", "burim",
+            "buroi", "buron", "burra", "burre", "burri", "bursa", "buste", "busti", "buton", "buzet", "byrek" , "cakun", "cekim", "cekur",
+            "ceket", "cikli", "cilat", "cilet", "cinik", "cirku", "citim", "citoj", "citon", "civil", "cjapi",  "copat", "cungu", "cenim",
+            "qante", "qanta", "qafen", "qarje", "qarku", "qarte", "qasje", "qejfi", "qelqi", "qelia", "qengj", "qepje", "qepur","qepet",
+            "qeset", "qeshi", "qiell", "qifte", "qilim", "qimet", "qoban", "qofte", "qorri", "qoshe", "qmimi", "qytet", "quajm", "quani",
+            "quhet", "qymyr", "qypat", "qyqja", "dalja", "dalje", "danez", "darka", "dasem", "dashi", "datat", "daten", "debat", "deget",
+            "dehur", "dekan", "dekor", "delet", "denon", "denoi", "derbi", "derri", "detaj", "detar", "dhemb", "dhija", "dheut", "dhoma",
+            "dhuna", "dhuro", "diell", "dieta", "dihet", "dikur", "dimer", "dimri", "dinak", "ditar", "diqka", "ditet", "diten", "divan",
+            "djali", "djath", "dobia", "dogji", "dosja", "drama", "drejt", "dreri", "drita", "droni", "droga", "drunj", "duart", "dueli",
+            "duhan", "dukej", "durim", "dushk", "dyert", "dylli", "dyqan", "dyshoj", "efekt", "ekipi", "ekran", "email", "emrat", "emrin",
+            "endej", "endem", "enjte", "enkas", "epoka", "epike", "epiri", "epope", "epror", "erdha", "erdhe", "erdhi", "eseja", "etike",
+            "etnik", "evrop", "fakte", "fajet", "fakti", "fajin", "falas", "falem", "falej", "falje", "falso", "fanta", "faqet", "faqen",
+            "farat", "fasha", "farue", "fatal", "fauna", "faull", "favor", "fazan", "fazat", "fejua", "femer", "femij", "femra", "ferma",
+            "festa", "feste", "fetar", "fidan", "fibra", "figur", "fijet", "fikur", "fillim", "filiz", "filma", "filmi", "flija", "flori",
+            "firme", "fishek", "fitil", "fitore", "fizik", "fjala", "fjali", "fjeti", "flase", "flaka", "flamur", "fllad", "floku", "flota",
+            "fluks", "fobia", "fokat", "fokus", "folja", "forca", "forma", "forum", "fotot", "fqinj", "frika", "froni", "fruta", "fruti",
+            "fruth", "fryma", "fshat", "fshij", "fsheh", "ftoht", "festa", "fuqia", "fundi", "furra", "fusha", "gabim", "gaboi", "gaboj",
+            "garat", "gardh", "garim", "garoi", "gatim", "gazra", "germa", "gezim", "gezon", "gisht", "gjahu", "gjaja", "gjaku", "gjalp",
+            "gjasa", "gjemb", "gjeni", "gjera", "gjest", "gjoba", "gjoks", "gjuha", "gjumi", "gjuri", "gjyqi", "gjysh","globi", "godas",
+            "godin", "gomar", "golla", "greva", "gropa", "gruja", "grupi", "grimi", "gripi", "grosh", "gruri", "gryka", "gunga", "gusht",
+            "guxim", "guxoj", "gypat", "hajde", "halla", "halli", "hamam", "hamar", "hapat", "hapja", "hapur", "harro", "harta", "hekur",
+            "helmi", "heret", "heroi", "hesap", "hesht", "hetoj", "himni", "hitet", "hijet", "hotel", "humbe", "humbi", "hunda", "hurme",
+            "hutat", "hyrje", "himni", "idhuj", "idiot", "ideja", "iriqi", "ishim", "mbret", "ideal", "imazh", "ishuj", "intim", "ikona",
+            "iliri", "jahni", "janar", "jasht", "japim", "japin", "javet", "jelek", "jetim", "jetoj", "jeton", "jugor", "juria", "kafaz",
+            "kafja", "kafka", "kafsh", "kahje", "kajsi", "kakao", "kanal", "kanga", "kanun", "kapak", "kapel", "kauza", "kazan", "kazma",
+            "kembe", "kerko", "ketri", "kimik", "kinez", "klasa", "kliko", "klima", "klipi", "klori", "kobra", "kocka", "kodim", "kodra",
+            "kohet", "kokos", "koleg", "kolon", "kolli", "kombi", "komik", "komod", "komun", "konak", "kopje", "koret", "korsi", "kosov",
+            "kotec", "krahu", "krali", "kredi", "kremi", "krimb", "krimi", "kriza", "kripa", "kursi", "kulmi", "kupat", "kurth", "kusht",
+            "kyqet", "dorza", "lagje", "lajme", "lajmi", "laker", "lakmi", "lapsi", "larmi", "larva", "lexim", "lecka", "legen", "lemza",
+            "lengu", "lente", "lenda", "lepur", "letra", "leviz", "lexim", "libri", "lezha", "ligji", "limon", "linku", "liqen", "lista",
+            "litar", "lista", "llafe", "llull", "lobim", "loder", "lojra", "lokal", "lotet", "luani", "lufta", "macja", "mafia", "magar",
+            "magji", "makin", "makth", "malet", "mango", "marte", "masiv", "maska", "maxhe", "media", "merak", "mesim", "mesoj", "metri",
+            "miell", "milja", "minus", "minut", "mishi", "misri", "mixha", "mizat", "mjalt", "mjeku", "mjete", "mobil", "mllef", "model",
+            "modul", "mohim", "molla", "moral", "mosha", ""],
+           
+        };
+
+        let currentWord, wordLength, attemptsLeft;
+        let currentGuess = [];
+        let currentRowIndex = 0;
+        const maxAttempts = 6;
+
+        function newGame() {
+            const lengths = Object.keys(fjalet).map(Number);
+            wordLength = lengths[Math.floor(Math.random() * lengths.length)];
+            currentWord = fjalet[wordLength][Math.floor(Math.random() * fjalet[wordLength].length)].toUpperCase();
+            attemptsLeft = maxAttempts;
+            currentGuess = [];
+            currentRowIndex = 0;
+            
+            document.getElementById('grid').innerHTML = '';
+            document.getElementById('message').textContent = '';
+            
+            // Initialize grid
+            for(let i = 0; i < maxAttempts; i++) {
+                const row = document.createElement('div');
+                row.className = 'row';
+                for(let j = 0; j < wordLength; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    row.appendChild(cell);
+                }
+                document.getElementById('grid').appendChild(row);
+            }
+            
+            // Enable keyboard
+            document.querySelectorAll('.key-button').forEach(button => {
+                button.disabled = false;
+            });
+        }
+
+        function pressKey(letter) {
+            if (currentGuess.length < wordLength && currentRowIndex < maxAttempts) {
+                currentGuess.push(letter);
+                updateCurrentRowDisplay();
+            }
+        }
+
+        function deleteKey() {
+            if (currentGuess.length > 0) {
+                currentGuess.pop();
+                updateCurrentRowDisplay();
+            }
+        }
+
+        function updateCurrentRowDisplay() {
+            const currentRow = document.getElementsByClassName('row')[currentRowIndex];
+            if (!currentRow) return;
+            Array.from(currentRow.children).forEach((cell, index) => {
+                cell.textContent = currentGuess[index] || '';
+            });
+        }
+
+        function submitGuess() {
+            const guess = currentGuess.join('').toUpperCase();
+            
+            if(guess.length !== wordLength) {
+                showMessage(`Fjala duhet të ketë ${wordLength} shkronja!`);
+                return;
+            }
+            
+            if(!Object.values(fjalet).flat().includes(guess.toLowerCase())) {
+                showMessage("Fjala nuk ekziston në listën tonë!");
+                return;
+            }
+
+            const row = document.getElementsByClassName('row')[currentRowIndex];
+            const result = checkGuess(guess, currentWord);
+            
+            result.forEach((status, index) => {
+                setTimeout(() => {
+                    row.children[index].classList.add(status);
+                }, index * 200);
+            });
+
+            attemptsLeft--;
+            
+            if(guess === currentWord) {
+                showMessage(`Urime! E gjetët fjalën në ${maxAttempts - attemptsLeft} tentativa!`, 'green');
+                disableKeyboard();
+                return;
+            }
+            
+            if(attemptsLeft === 0) {
+                showMessage(`Loja mbaroi! Fjala ishte: ${currentWord}`, 'red');
+                disableKeyboard();
+            }
+
+            currentRowIndex++;
+            currentGuess = [];
+        }
+
+        function checkGuess(guess, target) {
+            const result = Array(guess.length).fill('absent');
+            const targetLetters = target.split('');
+            
+            guess.split('').forEach((letter, i) => {
+                if(letter === target[i]) {
+                    result[i] = 'correct';
+                    targetLetters[i] = null;
+                }
+            });
+            
+            guess.split('').forEach((letter, i) => {
+                if(result[i] !== 'correct' && targetLetters.includes(letter)) {
+                    result[i] = 'present';
+                    targetLetters[targetLetters.indexOf(letter)] = null;
+                }
+            });
+            
+            return result;
+        }
+
+        function showMessage(text, color = 'black') {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.style.color = color;
+            setTimeout(() => message.textContent = '', 4000);
+        }
+
+        function disableKeyboard() {
+            document.querySelectorAll('.key-button').forEach(button => {
+                button.disabled = true;
+            });
+        }
+
+        // Start new game when page loads
+        newGame();
+    </script>
+</body>
+</html>
