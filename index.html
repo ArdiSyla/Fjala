@@ -48,6 +48,7 @@
             </div>
         </div>
         <button onclick="newGame()">Loje e Re</button>
+        <button id="hintButton" onclick="giveHint()">Ndihmë</button>
     </div>
 
     <script>
@@ -82,7 +83,8 @@
             "vija", "vila", "vite", "vize", "vlen", "vjet", "vler", "vlla", "vota", "vrap", "vula", "xham", "xehe", "xhep", "xixa",
             "yjet", "ylli", "zarf", "zbeh", "zbut", "zeri", "zero", "zhyt", "zile", "ziej", "zogu", "zona", "zyre", "zeri", "blej",
             "boks", "bosh", "java", "jugu", "ligj", "guri", "ftyr", "drit", "grep", "gjel", "pret", "adet", "port", "harp", "prit",
-            "bart", "emri", "euro", "ftua", "etur", "supe", "mali", "hije", "hart", "hare", "pirg", "nyje", "syri", ""],
+            "bart", "emri", "euro", "ftua", "etur", "supe", "mali", "hije", "hart", "hare", "pirg", "nyje", "syri", "ruaj", "muaj",
+            ""],
             5: ["abort", "acide", "afate", "afati", "afera", "afert", "afroj", "agrar", "aheng", "ajror", "akull", "alibi", "akoma",
             "akord", "akrep", "akses", "aktor", "aktiv", "akuza", "aleat", "alpet", "ambel", "anash", "anija", "anije", "ankim","ankoj",
             "ankth", "antar", "ansor", "antik", "arinj", "arkiv", "armik", "aroma", "arrij", "arrit", "arsye", "aspak", "atdhe", "atlas",
@@ -147,6 +149,7 @@
         let currentGuess = [];
         let currentRowIndex = 0;
         const maxAttempts = 6;
+        let hintUsed = false;
 
         function newGame() {
             const lengths = Object.keys(fjalet).map(Number);
@@ -155,9 +158,13 @@
             attemptsLeft = maxAttempts;
             currentGuess = [];
             currentRowIndex = 0;
+            hintUsed = false;
             
             document.getElementById('grid').innerHTML = '';
             document.getElementById('message').textContent = '';
+            document.getElementById('hintButton').disabled = false;
+        
+            
             
             // Initialize grid
             for(let i = 0; i < maxAttempts; i++) {
@@ -177,10 +184,48 @@
             });
         }
 
+        function giveHint() {
+            if (hintUsed || currentRowIndex >= maxAttempts) return;
+            const currentRow = document.getElementsByClassName('row')[currentRowIndex];
+            if (!currentRow) return;
+        
+            // Provide a hint for a random position
+            let possibleIndices = [];
+            for (let i = 0; i < currentWord.length; i++) {
+                if (!currentGuess[i]) {
+                    possibleIndices.push(i);
+                }
+            }
+        
+            if (possibleIndices.length === 0) return;
+        
+            const randomIndex = possibleIndices[Math.floor(Math.random() * possibleIndices.length)];
+            currentGuess[randomIndex] = currentWord[randomIndex];
+            currentRow.children[randomIndex].textContent = currentWord[randomIndex];
+        
+            hintUsed = true;
+            document.getElementById('hintButton').disabled = true;
+        }
+       
         function pressKey(letter) {
-            if (currentGuess.length < wordLength && currentRowIndex < maxAttempts) {
-                currentGuess.push(letter);
-                updateCurrentRowDisplay();
+            if (currentRowIndex >= maxAttempts) return;
+        
+            const currentRow = document.getElementsByClassName('row')[currentRowIndex];
+            if (!currentRow) return;
+        
+            // Find the first empty position
+            let firstEmptyIndex = -1;
+            for (let i = 0; i < currentWord.length; i++) {
+                if (!currentGuess[i]) {
+                    firstEmptyIndex = i;
+                    break;
+                }
+            }
+        
+            // Only allow input at the first empty position
+            if (firstEmptyIndex !== -1) {
+                currentGuess[firstEmptyIndex] = letter;
+                currentRow.children[firstEmptyIndex].textContent = letter;
             }
         }
 

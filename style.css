@@ -193,3 +193,22 @@ button:active {
         min-width: 6vmin;
     }
 }
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 1vmin;
+    margin-top: 2vmin;
+}
+
+#hintButton:disabled {
+    background-color: #787c7e;
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+    .button-container {
+        flex-direction: row;
+        gap: 2vmin;
+    }
+}
